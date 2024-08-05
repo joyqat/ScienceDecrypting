@@ -1,3 +1,4 @@
+import os
 import sys
 import traceback
 import threading
@@ -51,8 +52,12 @@ if __name__ == "__main__":
     root.geometry("800x600")
     btn = tk.Button(root, text='选择要解密的文件', command=lambda: open_file())
     btn.pack(side=tk.TOP, pady=20)
-    LOG = tk.Text(root)
-    LOG.pack()
+    sb = tk.Scrollbar(root)
+    LOG = tk.Text(root, yscrollcommand=sb.set)
+    sb.config(command=LOG.yview)
+    sb.pack(side=tk.RIGHT, fill='y')
+    LOG.pack(side=tk.LEFT)
+
     sys.stdout = StdoutRedirector(LOG)
     sys.stderr = StdoutRedirector(LOG)
     tk.mainloop()
