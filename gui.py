@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter.filedialog import askopenfile
 
 from decrypt import decrypt_file, CustomException
-
+from ctypes import windll
 
 class StdoutRedirector(object):
     def __init__(self, text_widget):
@@ -45,6 +45,7 @@ def decrypt_background(src, dst):
 
 
 if __name__ == "__main__":
+    windll.shcore.SetProcessDpiAwareness(1)
     root = tk.Tk()
     root.title("ScienceDecrypting")
     root.geometry("800x600")
