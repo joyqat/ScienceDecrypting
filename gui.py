@@ -3,7 +3,7 @@ import sys
 import traceback
 import threading
 import tkinter as tk
-from tkinter.filedialog import askopenfile
+from tkinter.filedialog import askopenfiles
 
 from decrypt import decrypt_file, CustomException
 from ctypes import windll
@@ -16,20 +16,25 @@ class StdoutRedirector(object):
         self.text_space.insert('end', string)
         self.text_space.see('end')
 
+    def flush(self):
+        pass
 
 def open_file():
-    file = askopenfile(filetypes=[
-        ("PDF/CAJ Files", "*")])
-    if not file:
+    files = askopenfiles(filetypes=[
+        ("PDF/CAJ", "*.pdf *.caj")])
+    if not files:
         return
-    src = file.name
-    dst_array = src.split(".")[:-1]
-    dst_array.append("dec")
-    dst_array.append("pdf")
-    dst = ".".join(dst_array)
-    print("开始解密", src)
-    threading.Thread(target=decrypt_background, args=(src, dst)).start()
 
+    threading.Thread(target=lambda: decrypt_files_background(files)).start()
+
+def decrypt_files_background(files):
+    for i in files:
+        outpath = os.path.dirname(i.name) + "/output/"
+        filename = os.path.basename(i.name)
+        if not os.path.exists(outpath):
+            os.mkdir(outpath)
+        print("开始解密", filename)
+        decrypt_background(i.name, outpath + filename)
 
 def decrypt_background(src, dst):
     try:
