@@ -1,6 +1,6 @@
 name: Release ScienceDecrypting
 
-on: [create]
+on: [create, workflow_dispatch]
 
 jobs:
   build:
